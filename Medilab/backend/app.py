@@ -2,9 +2,10 @@
 import email
 from enum import unique
 from operator import index
+from io import BytesIO
 
 from pickle import dump
-from flask import Flask,render_template,request,redirect,flash
+from flask import Flask,render_template,request,redirect,flash,send_file
 from flask.helpers import url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import PrimaryKeyConstraint, Table, select, true
@@ -26,14 +27,14 @@ login_manager.init_app(app)
 login_manager.login_view="login"
 
 # app.config["SQLALCHEMY_DATABASE_URI"] = "mysql:///username:password@localhost/databasename"
-
-#app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:@127.0.0.2:3307/medserv"
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://wqyhnamgjagypy:eecc88a24bbdecfcdca88fd04e8546e7700c3b81b44d741fbb539dbe753c23ee@ec2-34-194-158-176.compute-1.amazonaws.com:5432/dfk39eri6aqujp"
+# change your databse address here.password is not mandatory.
+# app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:@<your database localhost>/medserv"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:@127.0.0.2:3307/medserv"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app) 
 
 
 dl  = "nan"
-
 @login_manager.user_loader
 def load_user(user_id):
     if dl == "Doctor":
@@ -44,7 +45,9 @@ def load_user(user_id):
 
 class Test( db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    name = db.column(db.String(50))
+    email = db.column(db.String(50))           
+    filename = db.column(db.String(1000))
+    data = db.Column(db.LargeBinary)
 
 
 class User(db.Model,UserMixin):
@@ -60,6 +63,7 @@ class User(db.Model,UserMixin):
     upin = db.Column(db.Integer)
     ucaddress =  db.Column(db.String(60))
     upaddress =  db.Column(db.String(60))
+    ublood =  db.Column(db.String(5))
 
 # id																		
 
@@ -93,6 +97,7 @@ class Userdata(db.Model,UserMixin):
     udloc =  db.Column(db.String(100))
     udcon =  db.Column(db.String(15))
     umed =  db.Column(db.String(100))
+    utfile = db.Column(db.LargeBinary)
 
 class Doctordata(db.Model,UserMixin):
     id = db.Column(db.Integer, primary_key = True)
@@ -139,7 +144,6 @@ def signup():
         funame = request.form.get('uname') 
         fumail = request.form.get('umail')
         fudob = request.form.get('udob')
-
         fugender = request.form.get('ugender')
         fuphone = request.form.get('uphone')
         fauphone = request.form.get('auphone')
@@ -149,19 +153,16 @@ def signup():
         fucaddress = request.form.get('ucaddress')
         fupaddress = request.form.get('upaddress')
         funame = request.form.get('uname')
-        
+        fublood = request.form.get('ublood')
         user = User.query.filter_by(umail = fumail).first()
         phcheck = User.query.filter_by(uphone = fuphone).first()
         if user or phcheck:
             flash("E-mail or Phone You have entered Already Exist", "info")
             return render_template("usersignup.html")
-
-        new_user = db.engine.execute(f"INSERT INTO `user` (`id`, `uname`, `umail`, `uphone`, `udob`, `ugender`, `auphone`, `upass`, `cupass`, `upin`, `ucaddress`, `upaddress`)  VALUES (NULL, '{funame}','{fumail}','{fuphone}','{fudob}','{fugender}','{fauphone}','{fupass}','{fcupass}','{fupin}','{fucaddress}','{fupaddress}');")
+        new_user = db.engine.execute(f"INSERT INTO `user` (`id`, `uname`, `umail`, `uphone`, `udob`, `ugender`, `auphone`, `upass`, `cupass`, `upin`, `ucaddress`, `upaddress`, `ublood`)  VALUES (NULL, '{funame}','{fumail}','{fuphone}','{fudob}','{fugender}','{fauphone}','{fupass}','{fcupass}','{fupin}','{fucaddress}','{fupaddress}','{fublood}');")
 
         flash("Registration Successful enter Credential for Account Access", "success")
-        
         return render_template("userlogin.html")
-        
     return render_template("usersignup.html")
 
 
@@ -246,14 +247,22 @@ def cusers():
         fudloc = request.form.get('udloc')
         fudcon = request.form.get('udcon')
         fumed = request.form.get('umed')
+
+        file = request.files['utfile']
+
+        upload = Test(data=file.read())
+        upload2 = Userdata( utfile=file.read())
+
         
+       
+        new_user2 = db.engine.execute(f"INSERT INTO `test` (`id`, `email`, `filename`, `data`)  VALUES (NULL, '{fumail}','{file.filename}','{upload}');")
         # user = User.query.filter_by(umail = fumail).first()
         # phcheck = User.query.filter_by(uphone = fuphone).first()
         # if user or phcheck:
         #     flash("E-mail or Phone You have entered Already Exist", "info")
         #     return render_template("usersignup.html")
         							
-        new_user = db.engine.execute(f"INSERT INTO `userdata` (`id`, `email`, `uname`, `udis`, `utd`, `uhc`, `udocn`, `udloc`, `udcon`, `umed`)  VALUES (NULL, '{fumail}', '{funame}','{fudis}','{futd}','{fuhc}','{fudocn}','{fudloc}','{fudcon}','{fumed}');")
+        new_user = db.engine.execute(f"INSERT INTO `userdata` (`id`, `email`, `uname`, `udis`, `utd`, `uhc`, `udocn`, `udloc`, `udcon`, `umed`, `utfile`)  VALUES (NULL, '{fumail}', '{funame}','{fudis}','{futd}','{fuhc}','{fudocn}','{fudloc}','{fudcon}','{fumed}','{upload2}');")
 
         flash("Data Added Succesfully", "success")
         
@@ -261,9 +270,22 @@ def cusers():
         
     return render_template("cuserdash.html",postsdata=postsdata)
 
-@app.route("/emergency")
+@app.route('/download')
+@login_required
+def download():
+    email = current_user.umail
+    postsdata = Test.query.filter_by(email = email).first()
+    return send_file(BytesIO(postsdata.data), attachment_filename=postsdata.filename, as_attachment=True)
+
+@app.route("/emergency", methods=['POST','GET'])
 @login_required
 def emergency():
+    if request.method == "POST":
+        fdname = request.form.get('enterid')
+        postsdata = Userdata.query.filter_by(email = fdname).all()
+        postsdata1 = User.query.filter_by(umail = fdname).first()
+        tuples = (postsdata, postsdata1)
+        return render_template("emergencydetail.html", postsdata= tuples)
     return render_template("emergency.html")
 
 
@@ -313,8 +335,6 @@ def doctorlogin():
         dl = request.form.get('dlabel')
         user = Doctor.query.filter_by(dmail = email).first_or_404(description='There is no data with {}'.format(email))
 
-        # print(dl)
-
         if user and user.dpass == upass and user.duprn==uprn:
             
             login_user(user)
@@ -352,22 +372,19 @@ def docp():
         fudloc = request.form.get('udloc')
         fudcon = request.form.get('udcon')
         fumed = request.form.get('umed')
-        
-        # user = User.query.filter_by(umail = fumail).first()
-        # phcheck = User.query.filter_by(uphone = fuphone).first()
-        # if user or phcheck:
-        #     flash("E-mail or Phone You have entered Already Exist", "info")
-        #     return render_template("usersignup.html")
-        							
+        file = request.files['utfile']
+        upload = Test(data=file.read())
+        upload2 = Userdata( utfile=file.read())
+        new_user3 = db.engine.execute(f"INSERT INTO `test` (`id`, `email`, `filename`, `data`)  VALUES (NULL, '{fumail}','{file.filename}','{upload}');")
+       						
         new_user = db.engine.execute(f"INSERT INTO `doctordata` (`id`, `email`, `uname`,`udis`, `utd`, `uhc`, `udocn`, `udloc`, `udcon`, `umed`)  VALUES (NULL, '{fumail}','{funame}','{fudis}','{futd}','{fuhc}','{fudocn}','{fudloc}','{fudcon}','{fumed}');")
 
-        new_user2 = db.engine.execute(f"INSERT INTO `userdata` (`id`, `email`, `uname`,`udis`, `utd`, `uhc`, `udocn`, `udloc`, `udcon`, `umed`)  VALUES (NULL, '{fumail}','{funame}','{fudis}','{futd}','{fuhc}','{fudocn}','{fudloc}','{fudcon}','{fumed}');")
+        # new_user = db.engine.execute(f"INSERT INTO `userdata` (`id`, `email`, `uname`,`udis`, `utd`, `uhc`, `udocn`, `udloc`, `udcon`, `umed`)  VALUES (NULL, '{fumail}','{funame}','{fudis}','{futd}','{fuhc}','{fudocn}','{fudloc}','{fudcon}','{fumed}');")
+        new_user2 = db.engine.execute(f"INSERT INTO `userdata` (`id`, `email`, `uname`, `udis`, `utd`, `uhc`, `udocn`, `udloc`, `udcon`, `umed`, `utfile`)  VALUES (NULL, '{fumail}', '{funame}','{fudis}','{futd}','{fuhc}','{fudocn}','{fudloc}','{fudcon}','{fumed}','{upload2}');")
 
         flash("Data Added Succesfully", "success")
-        
         return render_template("docpatients.html",postsdata=postsdata)
     return render_template("docpatients.html",postsdata=postsdata)
-
 
 
 

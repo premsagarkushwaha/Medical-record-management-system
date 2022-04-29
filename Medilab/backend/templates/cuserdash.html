@@ -13,7 +13,12 @@
 <div class="l-navbar" id="nav-bar">
   <nav class="nav">
       <div> <a href="#" class="nav_logo"> <i class='bx bx-layer nav_logo-icon'></i> <span class="nav_logo-name">{{current_user.uname}}</span> </a>
-          <div class="nav_list"> <a href="/userdash" class="nav_link active"> <i class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Dashboard</span> </a> <a href="/cusers" class="nav_link"> <i class='bx bx-user nav_icon'></i> <span class="nav_name">Users</span> </a> <a href="#" class="nav_link"> <i class='bx bx-message-square-detail nav_icon'></i> <span class="nav_name">Messages</span> </a> <a href="#" class="nav_link"> <i class='bx bx-bookmark nav_icon'></i> <span class="nav_name">Bookmark</span> </a> <a href="#" class="nav_link"> <i class='bx bx-folder nav_icon'></i> <span class="nav_name">Files</span> </a> <a href="#" class="nav_link"> <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">Stats</span> </a> </div>
+          <div class="nav_list"> <a href="/userdash" class="nav_link active"> <i class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Dashboard</span> </a> <a href="/cusers" class="nav_link"> <i class='bx bx-user nav_icon'></i> <span class="nav_name">Users</span> </a> 
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfKngnHHBnVhslwcsGrhlw3A9UFPvCIkukOJwxrjagbPriW6w/viewform?usp=sf_link" class="nav_link"> <i class='bx bx-message-square-detail nav_icon'></i> <span class="nav_name">Messages</span> </a> 
+            <!-- <a href="#" class="nav_link"> <i class='bx bx-bookmark nav_icon'></i> <span class="nav_name">Bookmark</span> </a> 
+            <a href="#" class="nav_link"> <i class='bx bx-folder nav_icon'></i> <span class="nav_name">Files</span> </a> 
+            <a href="#" class="nav_link"> <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">Stats</span> </a>  -->
+          </div>
       </div> <a href="/logout" class="nav_link"> <i class='bx bx-log-out nav_icon'></i> <span class="nav_name">SignOut</span> </a>
   </nav>
 </div>
@@ -50,7 +55,7 @@
                     <h4 class="header-title mt-0 text-center"><strong>Add disease</strong>  </h4>
                     <div class="panel-body">
                       <br>
-                      <form action="" method="post" role="form">
+                      <form action="" method="post" role="form" enctype="multipart/form-data">
                         <!-- Text input -->
                         <div class="form-outline mb-4">
                           <input type="email" id="form6Example3" name="email" class="form-control" value="{{current_user.umail}}" readonly/>
@@ -104,6 +109,12 @@
                           <textarea class="form-control" id="form6Example7" name="umed" rows="4"></textarea>
                           <label class="form-label" for="form6Example7">Treatment Medicines</label>
                         </div>
+                        
+                        <div class="form-outline mb-4">
+                          <input type="file" id="form6Example6" name="utfile" class="form-control" />
+                          <label class="form-label" for="form6Example6">Add File</label>
+                        </div>
+
                       
                         <!-- Checkbox -->
                         <!-- <div class="form-check d-flex justify-content-center mb-4">

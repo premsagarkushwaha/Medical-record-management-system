@@ -15,7 +15,7 @@
       <div> <a href="#" class="nav_logo"> <i class='bx bx-layer nav_logo-icon'></i> <span class="nav_logo-name">{{current_user.dname}}</span> </a>
           <div class="nav_list"> <a href="/dash" class="nav_link active"> <i class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Dashboard</span> </a> 
             <a href="/docp" class="nav_link"> <i class='bx bx-user nav_icon'></i> <span class="nav_name">Patients</span> </a> 
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLScye-zTzY1E9F880OrxMhpaqCoTRlHFQUctZgk6yYKmnYrTmA/viewform?usp=sf_link" class="nav_link"> <i class='bx bx-message-square-detail nav_icon'></i> <span class="nav_name">Messages</span> </a> 
+            <a href="#" class="nav_link"> <i class='bx bx-message-square-detail nav_icon'></i> <span class="nav_name">Messages</span> </a> 
             <!-- <a href="#" class="nav_link"> <i class='bx bx-bookmark nav_icon'></i> <span class="nav_name">Bookmark</span> </a>  -->
             <a href="/emergency" class="nav_link"> <i class='bx bx-folder nav_icon'></i> <span class="nav_name">Emergency</span> </a> 
             <!-- <a href="#" class="nav_link"> <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">Stats</span> </a>  -->
@@ -61,7 +61,7 @@
                     <h4 class="header-title mt-0 text-center"><strong>Face Recognition</strong> </h4>
                     <div class="panel-body">
                         <br>
-                        
+                        <form action="" method="post" role="form">
                             <!-- Text input -->
                             <div class="form-outline mb-4">
                                 <!-- <input type="file" id="form6Example3" class="form-control" onchange="readURL(this)"
@@ -75,10 +75,9 @@
 
 
                             <!-- Submit button -->
-                            <!-- http://127.0.0.1:5500/Face-Recognition-JavaScript-master/index.html -->
-                            <a href="#" class="btn btn-primary btn-block mb-4 text-center">Get Started</a>
+                            <a href="http://127.0.0.1:5500/Face-Recognition-JavaScript-master/index.html" class="btn btn-primary btn-block mb-4 text-center">Get Started</a>
                             
-                        
+                        </form>
                         <ul class="social-links list-inline mt-4 mb-0">
                             <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip"
                                     class="tooltips" href="" data-original-title="Facebook"><i
@@ -106,28 +105,63 @@
 
                 <!-- end row -->
                 <div class="card-box">
-                    <h4 class="header-title mt-0 mb-3">Fetched Record will Show Here</h4>
-                    <div class="">
-                        <div class="">
-
-                            <form action="/emergency" method="post" role="form">
-                                <!-- Text input -->
-                                <div class="form-outline mb-4">
-                                    <input type="text" id="form6Example5"  name="enterid" class="form-control" />
-                                    <label class="form-label" for="form6Example5">Enter </label>
-                                  </div>
-                                  <button type="submit" class="btn btn-primary btn-block mb-4 text-center">Get Detail</button>
-                                
-                            </form>
-                            <!-- <h5 class="text-custom">Lead designer / Developer</h5>
-                            <p class="mb-0">websitename.com</p>
-                            <p><b>2010-2015</b></p>
-                            <p class="text-muted font-13 mb-0"></p> -->
-                        </div>
-                        <hr>
-
-                    </div>
+                    <h5 class="header-title mt-0 mb-3">     <strong>Name</strong>         :   {{postsdata[1].uname}} </h4>
+                    <h5 class="header-title mt-0 mb-3">      <strong>Phone  </strong>     : {{postsdata[1].uphone}} </h4>
+                    <h5 class="header-title mt-0 mb-3"><strong>Alternate Phone</strong>   : {{postsdata[1].auphone}} </h4>
+                    <h5 class="header-title mt-0 mb-3">  <strong>Current Address</strong> : {{postsdata[1].ucaddress}} </h4>
+                    <h5 class="header-title mt-0 mb-3"><strong>Permanent Address</strong> : {{postsdata[1].upaddress}} </h4>
+                    <h5 class="header-title mt-0 mb-3"><strong>PIN</strong> : {{postsdata[1].upin}} </h4>
+                    <h5 class="header-title mt-0 mb-3"><strong>Blood Group</strong> : {{postsdata[1].ublood}} </h4>
+                    
                 </div>
+                <table class="table align-middle mb-0 bg-white">
+                    <thead class="bg-light">
+                      <tr>
+                        <th>Disease</th>
+                        <th>Doctor</th>
+                        <th>Location</th>
+                        <th>Contact</th>
+                        <th>Medicines</th>
+                      </tr>
+                    </thead>
+                    
+                    <tbody>
+                      {% for row in postsdata[0]%}
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <!-- <img
+                                src="https://mdbootstrap.com/img/new/avatars/8.jpg"
+                                alt=""
+                                style="width: 45px; height: 45px"
+                                class="rounded-circle"
+                                /> -->
+                            <div class="ms-3">
+                              <p class="fw-bold mb-1">{{row.udis}}</p>
+                              <p class="text-muted mb-0">{{row.utd}}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <p class="fw-normal mb-1">{{row.udocn}}</p>
+                          <p class="text-muted mb-0">{{row.uhc}}</p>
+                        </td>
+                        <td>
+                          <span>{{row.udloc}}</span>
+                        </td>
+                        <td>{{row.udcon}}</td>
+                        <td>
+                          {{row.umed}}
+                          <!-- <button type="button" class="btn btn-link btn-sm btn-rounded">
+                            Edit
+                          </button> -->
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                   
+
+                  </table>
 
             </div>
             <!-- end col -->

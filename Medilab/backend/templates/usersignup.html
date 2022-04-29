@@ -72,6 +72,26 @@
                 <div class="validate"></div>
             </div>
             
+            <div class="form-group mt-3">
+              <select name="ublood" id="department" class="form-select" required>
+                <option value="">Blood Group</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+              <div class="validate"></div>
+          </div>
+
+          <div class="form-group mt-3">
+            <strong>Profile</strong>
+            <input type="file" class="form-control" name="upaddress" id="upaddress" placeholder=" Your Permanent Address" data-rule="minlen:4" data-msg="Please enter at least 4 chars" required>
+            <div class="validate"></div>
+        </div>
             <div class="text-center">
                 <br>
                 <button type="submit" class="btn btn-primary btn-rounded">Sign Up</button>
