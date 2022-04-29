@@ -1,6 +1,6 @@
 # Medical-record-management-system
-Requirements: 
-1. VS code, Xampp, python
+Requirements: VS code, Xampp, python
+
 step to run :
 
 1. Download and extract or clone the project.
