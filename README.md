@@ -4,7 +4,7 @@ Requirements: VS code, Xampp, python
 step to run :
 
 1. Download and extract or clone the project.
-2. Download database medserve.sql file and create a database name "medserv" in your xampp server(phpMyAdmibn) and import this medserv.sql file in your database.
+2. Create a database name "medserv" in your xampp server(phpMyAdmibn) and import this medserv.sql file in your database. 
 3. After successfully creation of databse change server in app.py file. you have to change ip and port in database address. you can get it on your xampp medserv database below is
    the image how you can find:
    ![Databse](https://github.com/premsagarkushwaha/prms_db/blob/main/git-tut/db-localhost.png)
