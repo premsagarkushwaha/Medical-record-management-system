@@ -9,6 +9,6 @@ step to run :
    ![Databse](https://drive.google.com/file/d/1xBLCTFvNNFTjIFSxpCXZMuOdX6cFGJae/view?usp=sharing)
    
    Here you have to make change
-   ![alt text](https://drive.google.com/file/d/1pYQQ0RP0CxipgmGmhWYOTMoUBa32W6Xi/view)
+   ![alt text](https://github.com/premsagarkushwaha/prms_db/blob/main/git-tut/app.png)
 4. now run app.py file.
 5. note: always kepp on your database.
