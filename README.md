@@ -13,4 +13,4 @@ step to run :
    ![alt text](https://github.com/premsagarkushwaha/prms_db/blob/main/git-tut/app.png)
 4. Install all required library in your machine.
 5. Now run app.py file.
-6. Note: always kepp on your database.
+6. Note: always keep on your database(phpMyAdmin).
